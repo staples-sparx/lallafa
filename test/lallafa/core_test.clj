@@ -91,8 +91,8 @@
 (deftest parsing-csv-into-nested-maps
   (let [result
         (csv/->rows (sample-csv)
-                      {:skip-header true
-                       :separator \space})
+                    {:skip-header true
+                     :separator \space})
         map-result
         (csv/rows->map result sample-field-reader-opts)
 
@@ -104,19 +104,19 @@
 
     (testing "Given a csv, generate map of maps {k-fn, the row}"
       (is (utils/=== expected-map-result
-             map-result))
+                     map-result))
       (is (map? map-result))
       (is (map? (get map-result 1))))
 
     (testing "Given a csv, generate a coll of maps {k-fn, the row}"
       (is (utils/=== expected-coll-result
-             coll-result))
+                     coll-result))
       (is (seq? coll-result))
       (is (map? (first coll-result))))
 
     (testing "Given a csv and a predicate function, filter the collection of maps by the predicate function"
       (is (utils/=== [(get expected-map-result 1)]
-             id-1-p-result)))
+                     id-1-p-result)))
 
     (testing "The parsed csv does not contain empty lines"
       (is (empty? (->> coll-result (filter :id) (filter nil?)))))))
@@ -125,47 +125,47 @@
   (testing
       "Given a csv, generate map of maps {k-fn, the row} excludes columns"
     (is (utils/=== {1
-            {:status "1",
-             :split_point "1990",
-             :split_var "most_expensive_product_in_cart",
-             :right 3,
-             :extra "added this",
-             :id 1},
-            2
-            {:status "1",
-             :split_point "0.5",
-             :split_var "os.Windows",
-             :right 5,
-             :extra "added this",
-             :id 2},
-            3
-            {:status "1",
-             :split_point "1.5",
-             :split_var "cart_actions",
-             :right 7,
-             :extra "added this",
-             :id 3},
-            4
-            {:status "1",
-             :split_point "8983.5",
-             :split_var "price",
-             :right 9,
-             :extra "added this",
-             :id 4}}
-           (csv/rows->map (csv/->rows
-                               (sample-csv)
-                               {:skip-header true :separator \space})
-                              (assoc sample-field-reader-opts
-                                     :exclude-columns #{1 6}))))))
+                    {:status "1",
+                     :split_point "1990",
+                     :split_var "most_expensive_product_in_cart",
+                     :right 3,
+                     :extra "added this",
+                     :id 1},
+                    2
+                    {:status "1",
+                     :split_point "0.5",
+                     :split_var "os.Windows",
+                     :right 5,
+                     :extra "added this",
+                     :id 2},
+                    3
+                    {:status "1",
+                     :split_point "1.5",
+                     :split_var "cart_actions",
+                     :right 7,
+                     :extra "added this",
+                     :id 3},
+                    4
+                    {:status "1",
+                     :split_point "8983.5",
+                     :split_var "price",
+                     :right 9,
+                     :extra "added this",
+                     :id 4}}
+                   (csv/rows->map (csv/->rows
+                                   (sample-csv)
+                                   {:skip-header true :separator \space})
+                                  (assoc sample-field-reader-opts
+                                         :exclude-columns #{1 6}))))))
 
 (deftest load-psv-files
   (testing "loading of psv files"
     (is (utils/=== {:zip "03062", :id "1431413"}
-           (get (csv/rows->map (csv/->rows
-                                    (sample-psv)
-                                    {:skip-header true :separator \|})
-                                   {:key-fn :id
-                                    0 {:label :id :reader identity}
-                                    2 {:label :zip :reader identity}})
-                "1431413")))))
+                   (get (csv/rows->map (csv/->rows
+                                        (sample-psv)
+                                        {:skip-header true :separator \|})
+                                       {:key-fn :id
+                                        0 {:label :id :reader identity}
+                                        2 {:label :zip :reader identity}})
+                        "1431413")))))
 
